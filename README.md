@@ -1,5 +1,5 @@
-Welcome to GIRS!
-================
+Welcome to evapotranspiration!
+==============================
 
 ``evapotranspiration`` calculate reference evapotranspiration.
 
