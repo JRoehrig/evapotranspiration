@@ -88,18 +88,15 @@ Using pandas DataFrame:
 
 .. code-block::
 
-    df = pd.DataFrame({'date': ['2001-07-06', '2001-07-06'], 'u2': [2.078, 2.078],
-                       't_min': [12.3, 12.3], 't_max': [21.5, 21.5],
-                       'rh_min': [63, 63], 'rh_max': [84, 84], 'n': [9.25, 9.25]})
+    >>> df = pd.DataFrame({'date': ['2001-07-06', '2001-07-06'], 'u2': [2.078, 2.078],
+                          't_min': [12.3, 12.3], 't_max': [21.5, 21.5],
+                          'rh_min': [63, 63], 'rh_max': [84, 84], 'n': [9.25, 9.25]})
 
 .. code-block::
 
-    pm = PenmanMonteithDaily(elevation=100, latitude=50.80)
-    df = pm.et0_frame(df)
-    print(df)
-
-::
-
+    >>> pm = PenmanMonteithDaily(elevation=100, latitude=50.80)
+    >>> df = pm.et0_frame(df)
+    >>> print(df)
              date     u2  t_min  t_max  ...       Rnl      ET0r      ET0w       ET0
     0  2001-07-06  2.078   12.3   21.5  ...  3.711783  2.805122  1.067847  3.872969
     1  2001-07-06  2.078   12.3   21.5  ...  3.711783  2.805122  1.067847  3.872969
