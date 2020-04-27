@@ -13,9 +13,7 @@ http://warsa.de/evapotranspiration/
 Installation
 ____________
 
-::
-
-	pip install evapotranspiration
+pip install evapotranspiration
 
 
 Quickstart
@@ -24,8 +22,6 @@ __________
 For given elevation and latitude, different values of ETo can be calculated individually.
 One possible set of parameters is day of the year (doy), temperature (t), relative humidity (rh) and
 number of cloudless hours.
-
-.. code-block::
 
     >>> pm = PenmanMonteithDaily(elevation=100, latitude=50.80)
     >>> et0_187 = pm.et0(doy=187, u2=2.078, t_min=12.3, t_max=21.5, rh_min=63, rh_max=84, n=9.25)
@@ -38,16 +34,12 @@ number of cloudless hours.
 The day of the year can be replaced by the date and the number of cloudless hours can be replaced by the
 shortwave radiation (rs).
 
-.. code-block::
-
     >>> pm = PenmanMonteithDaily(elevation=100, latitude=50.80)
     >>> et0_187 = pm.et0(date='2019-07-06', u2=2.078, t_min=12.3, t_max=21.5, rh_min=63, rh_max=84, rs=22)
     >>> print(et0_187)
     3.8652694092853253
 
 The following parameters are available after each calculation:
-
-.. code-block::
 
     >>> print(pm.doy)
     187
@@ -86,14 +78,9 @@ The following parameters are available after each calculation:
 
 Using pandas DataFrame:
 
-.. code-block::
-
     >>> df = pd.DataFrame({'date': ['2001-07-06', '2001-07-06'], 'u2': [2.078, 2.078],
                           't_min': [12.3, 12.3], 't_max': [21.5, 21.5],
                           'rh_min': [63, 63], 'rh_max': [84, 84], 'n': [9.25, 9.25]})
-
-.. code-block::
-
     >>> pm = PenmanMonteithDaily(elevation=100, latitude=50.80)
     >>> df = pm.et0_frame(df)
     >>> print(df)
