@@ -1,23 +1,19 @@
-Welcome to evapotranspiration!
-==============================
+# Welcome to evapotranspiration!
 
 ``evapotranspiration`` calculate reference evapotranspiration.
 
 License: **MIT**
 
-Documentation
-_____________
+## Documentation
 
 http://warsa.de/evapotranspiration/
 
-Installation
-____________
+## Installation
 
 pip install evapotranspiration
 
 
-Quickstart
-__________
+## Quickstart
 
 For given elevation and latitude, different values of ETo can be calculated individually.
 One possible set of parameters is day of the year (doy), temperature (t), relative humidity (rh) and
