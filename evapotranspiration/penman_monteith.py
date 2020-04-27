@@ -607,6 +607,10 @@ class PenmanMonteithDaily(object):
         # Reference evapotranspiration
         self.et = self.etr + self.etw
         self.et = np.where(self.et < 0.0, 0.0, self.et)
+        try:
+            self.et = float(self.et)
+        except TypeError:
+            pass
         return self.et
 
     def et0_frame(self, df, **kwargs):
