@@ -16,8 +16,8 @@ pip install evapotranspiration
 ## Quickstart
 
 For given elevation and latitude, different values of ETo can be calculated individually.
-One possible set of parameters is day of the year (doy), temperature (t), relative humidity (rh) and
-number of cloudless hours.
+One possible set of parameters is day of the year (doy) [-], temperature (t) [°C], relative humidity 
+(rh) [%] and number of cloudless hours (n) [-].
 
     >>> pm = PenmanMonteithDaily(elevation=100, latitude=50.80)
     >>> et0_187 = pm.et0(doy=187, u2=2.078, t_min=12.3, t_max=21.5, rh_min=63, rh_max=84, n=9.25)
@@ -27,8 +27,8 @@ number of cloudless hours.
     >>> print(et0_188)
     3.7135214054227945
 
-The day of the year can be replaced by the date and the number of cloudless hours can be replaced by the
-shortwave radiation (rs).
+The day of the year can be replaced by the date ("YYYY-MM-DD") and the number of cloudless hours 
+can be replaced by the shortwave radiation (rs) [MJ/m²day].
 
     >>> pm = PenmanMonteithDaily(elevation=100, latitude=50.80)
     >>> et0_187 = pm.et0(date='2019-07-06', u2=2.078, t_min=12.3, t_max=21.5, rh_min=63, rh_max=84, rs=22)
@@ -86,3 +86,7 @@ Using pandas DataFrame:
 
     [2 rows x 19 columns]
  
+There are also other possible input parameters, like mean temperature and mean relative humidity. Also 
+parameters for other crops than reference grass can be defined. See the documentation for further details:
+http://warsa.de/evapotranspiration/
+
