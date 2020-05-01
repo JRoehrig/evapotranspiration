@@ -682,6 +682,9 @@ class PenmanMonteithDaily(object):
              :meth:`PenmanMonteithDaily` will be used.
            * **a_s** (*float or np.array*) - see :meth:`shortwave_radiation`. Default :math:`a_s = 0.25`.
            * **b_s** (*float or np.array*) - see :meth:`shortwave_radiation`. Default :math:`b_s = 0.50`.
+           * **negative_rnl** (bool) - allow negative net longwave radiation.  Default negative_rnl=True
+           * **negative_et0** (bool) - allow negative reference evapotranspiration.  Default negative_et0=True
+
         :return: (*float or np.array*) potential evapotranspiration *[mm/day]*.
 
         Cases:
@@ -798,6 +801,9 @@ class PenmanMonteithDaily(object):
 
         self.rns = self.net_shortwave_radiation(self.rs, self.albedo)
         self.rnl = self.net_longwave_radiation(t_min, t_max, self.rs, self.rs0, self.ea)
+        if kwargs.get('negative_rnl', False) and self.rnl < 0.0:
+            self.rnl = 0.0
+
         self.rn = self.rns - self.rnl
 
         # denominator of FAO 56 eq. 3
@@ -814,6 +820,8 @@ class PenmanMonteithDaily(object):
             self.et = float(self.et)
         except TypeError:
             pass
+        if kwargs.get('negative_rnl', False) and self.et < 0.0:
+            self.et = 0.0
         return self.et
 
     def et0_frame(self, df, **kwargs):
