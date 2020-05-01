@@ -1,7 +1,7 @@
 from setuptools import setup, find_packages
 NAME = 'evapotranspiration'
 
-VERSION = '0.0.1'
+VERSION = '0.0.2'
 
 DESCRIPTION = 'evapotranspiration'
 
@@ -25,7 +25,7 @@ setup(
     long_description=LONG_DESCRIPTION,
     download_url='https://github.com/JRoehrig/evapotranspiration',
     url='https://github.com/JRoehrig/evapotranspiration',
-    author='Jackson Roehrig',
+    author='Jackson Roehrig & Maria Paula Lorza Villegas',
     author_email='Jackson.Roehrig@th-koeln.de',
     license='MIT',
     classifiers=CLASSIFIERS,

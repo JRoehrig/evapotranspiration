@@ -52,8 +52,18 @@ exclude_patterns = ['_build', 'Thumbs.db', '.DS_Store']
 # html_theme = 'agogo'
 html_theme = 'sphinx_rtd_theme'
 html_theme_options = {'navigation_depth': 4,}
+# import sphinx_hand_theme
+# html_theme = 'sphinx_hand_theme'
+# html_theme_path = [sphinx_hand_theme.get_html_theme_path()]
+# html_theme_options = {'navigation_depth': 4,}
 
 # Add any paths that contain custom static files (such as style sheets) here,
 # relative to this directory. They are copied after the builtin static files,
 # so a file named "default.css" will overwrite the builtin "default.css".
 html_static_path = ['_static']
+
+autodoc_default_options = {
+    'members':         True,
+    'member-order':    'bysource',
+}
+
