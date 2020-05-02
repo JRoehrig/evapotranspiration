@@ -16,7 +16,7 @@ Penman-Monteith method described in
    tutorial/tutorial
 
 .. toctree::
-   :maxdepth: 2
+   :maxdepth: 3
 
    modules/modules
 
