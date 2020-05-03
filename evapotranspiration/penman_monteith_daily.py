@@ -10,7 +10,7 @@ class PenmanMonteithDaily(object):
     1998). Reference evapotranspiration for a hypothetical grass reference crop (:math:`h=12` *cm*;
     :math:`albedo=0.23`, and :math:`LAI=2.88`) is calculated by default. Wind and humidity observations at 2 meters
     height as well as soil heat flux density :math:`G=0.0` *MJ/m²day* are also assumed by default.
-    Default values can be changed in the keyword arguments (\*\*kwargs) described below.
+    Default values can be changed in the keyword arguments (`**kwargs`) described below.
 
     The class *PenmanMonteithDaily* solves equation 3 in
     `FAO 56 <http://www.fao.org/tempref/SD/Reserved/Agromet/PET/FAO_Irrigation_Drainage_Paper_56.pdf>`_:
@@ -24,30 +24,30 @@ class PenmanMonteithDaily(object):
     :param elevation: elevation above sea level (*z*) *[m]*. Used in :meth:`clear_sky_shortwave_radiation` and
         :meth:`atmospheric_pressure`
     :type elevation: float
-    :param latitude: latitude (:math:`\varphi`) *[decimal degree]*. Used in :meth:`sunset_hour_angle` and
+    :param latitude: latitude (:math:`\varphi`) *[decimal degrees]*. Used in :meth:`sunset_hour_angle` and
         :meth:`extraterrestrial_radiation`
     :type latitude: float
 
     :Keyword Arguments:
 
        * **albedo** (*float*) - albedo or canopy reflection coefficient (:math:`\alpha`) *[-]*.
-         Range: :math:`0.0  \leq \alpha \leq 1.0`. Default value: :math:`albedo=0.23` for the hypothetical grass
+         Range: :math:`0.0  \leq \alpha \leq 1.0`. Default :math:`albedo=0.23` for the hypothetical grass
          reference crop. Used in :meth:`net_shortwave_radiation`
-       * **h** (*float*) - crop height (*h*) *[m]*. Default value: :math:`h=0.12` for the hypothetical grass reference
+       * **h** (*float*) - crop height (*h*) *[m]*. Default :math:`h=0.12` for the hypothetical grass reference
          crop. Required to calculate the zero plane displacement height (:math:`d`) *[m]* and the roughness length
          governing momentum (:math:`z_{om}`) *[m]*, both necessary for the aerodynamic resistance (:math:`r_a`) *[s/m]*.
          See :meth:`aerodynamic_resistance_factor`
-       * **lai** (*float*) - leaf area index (:math:`LAI`) *[-]*. Default value: :math:`lai=2.88` for the hypothetical
+       * **lai** (*float*) - leaf area index (:math:`LAI`) *[-]*. Default :math:`lai=2.88` for the hypothetical
          grass reference crop. See *BOX 5* in
          `FAO 56 <http://www.fao.org/tempref/SD/Reserved/Agromet/PET/FAO_Irrigation_Drainage_Paper_56.pdf>`_ and
          :meth:`bulk_surface_resistance`
        * **rl** (*float*) - bulk stomatal resistance of well-illuminated leaf (:math:`r_l`) *[s/m]*. Default
-         value: :math:`rl=100.0` for any crop. See :meth:`bulk_surface_resistance`
-       * **zm** (*float*) - height of wind measurements *[m]*. Default value: :math:`zm=2.0`. Required to calculate
-         aerodynamic resistance (:math:`r_a`) *[s/m]*. See :meth:`aerodynamic_resistance_factor`
-       * **zh** (*float*) - height of humidity measurements *[m]*. Default value: :math:`zh=2.0`. Required to calculate
-         aerodynamic resistance (:math:`r_a`) *[s/m]*. See :meth:`aerodynamic_resistance_factor`
-       * **g** (*float*) - soil heat flux density (:math:`G`) *[MJ/m²day]*. Default value: :math:`g=0.0`. This
+         :math:`rl=100.0` for any crop. See :meth:`bulk_surface_resistance`
+       * **zm** (*float*) - height of wind measurements (:math:`z_m`) *[m]*. Default :math:`zm=2.0`. Required to
+         calculate aerodynamic resistance (:math:`r_a`) *[s/m]*. See :meth:`aerodynamic_resistance_factor`
+       * **zh** (*float*) - height of humidity measurements (:math:`z_h`) *[m]*. Default :math:`zh=2.0`. Required to
+         calculate aerodynamic resistance (:math:`r_a`) *[s/m]*. See :meth:`aerodynamic_resistance_factor`
+       * **g** (*float*) - soil heat flux density (:math:`G`) *[MJ/m²day]*. Default :math:`g=0.0`. This
          corresponds to :math:`G` in eq. 3, p. 19 above. It can be also given with daily parameters in :meth:`et0`
 
     .. note::
@@ -55,13 +55,13 @@ class PenmanMonteithDaily(object):
         :attr:`albedo`, :attr:`h`, and :attr:`lai` are only necessary when calculating evapotranspiration for crops
         other than reference grass.
 
-    :ivar doy: day of year [-]
+    :ivar doy: day of year *[-]*
     :ivar z: elevation in meters above sea level (*z*) *[m]*
     :ivar p: atmospheric pressure (*P*) *[kPa]*
-    :ivar u2: wind speed at height :math:`z` (:math:`u_2`) [m/s]
+    :ivar u2: wind speed at height :math:`z` (:math:`u_2`) *[m/s]*
     :ivar ld: latent heat of vaporization (:math:`\lambda`) *[MJ/kg]*. See :meth:`latent_heat_of_vaporization()`
-    :ivar s: saturation slope vapour pressure curve (:math:`\Delta`) *[kPa/°C]*.
-        See :meth:`saturation_slope_vapour_pressure_curve()`
+    :ivar s: slope of saturation vapour pressure curve (:math:`\Delta`) *[kPa/°C]*.
+        See :meth:`slope_of_saturation_vapour_pressure_curve()`
     :ivar psych: psychrometric constant (:math:`\gamma`) *[kPa/°C]*. See :meth:`psychrometric_constant()`
     :ivar mn: daylight hours (:math:`N`) *[hours]*. See :meth:`daylight_hours()`
     :ivar es: saturation vapour pressure (:math:`e_s`) *[kPa]*. See :meth:`saturation_vapour_pressure()`
@@ -81,17 +81,19 @@ class PenmanMonteithDaily(object):
         * **e** - ratio molecular weight of water vapour/dry air (:math:`\varepsilon`) *[-]*.
           :math:`e = 0.622`
         * **r** - specific gas constant *[kJ/kg.K]*. :math:`r = 0.287`
-        * **k** - von Karman constant (:math:`k`) *[-]*, see `FAO 56` eq. 4. :math:`k=0.41`
+        * **k** - von Karman constant (:math:`k`) *[-]*, see
+          `FAO 56 <http://www.fao.org/tempref/SD/Reserved/Agromet/PET/FAO_Irrigation_Drainage_Paper_56.pdf>`_ eq. 4.
+          :math:`k=0.41`
 
     Object crop specific factors:
-        * **d_factor** - factor of the zero plane displacement height (:math:`d`) *[-]*. :math:`d\_factor = 2.0 / 3.0`.
+        * **d_factor** - factor of the zero plane displacement height (:math:`d`) *[-]*. :math:`d\_factor = 2.0 / 3.0`
         * **zom_factor** - factor of the roughness length governing momentum transfer (:math:`z_{om}`) *[-]*.
           :math:`zom\_factor = 0.123`
         * **zoh_factor** - factor of the roughness length governing transfer of heat and vapour (:math:`z_{oh}`) *[-]*.
           :math:`zoh\_factor = 0.1`
-        * **lai_active_factor** - factor of the active (sunlit) leaf area index :math:`LAI_{active}` *[-]* (it
+        * **lai_active_factor** - factor of the active (sunlit) leaf area index (:math:`LAI_{active}`) *[-]* (it
           considers that generally only the upper half of dense clipped grass is actively contributing to the surface
-          heat and vapour transfer). Variable value: :math:`lai\_active\_factor = 0.5`
+          heat and vapour transfer). :math:`lai\_active\_factor = 0.5`
 
     Calculation with :meth:`et0`::
 
@@ -165,11 +167,11 @@ class PenmanMonteithDaily(object):
         self.f1 = 86400 * self.e / (1.01 * self.r * ra_factor)
         """f1 = (specific heat at constant pressure) * (mean air density at constant pressure) /
              (1.01 * :attr:`r` * :meth:`aerodynamic_resistance_factor`). 
-             `FAO 56 <http://www.fao.org/tempref/SD/Reserved/Agromet/PET/FAO_Irrigation_Drainage_Paper_56.pdf>`_ Box 6.
+             `FAO 56 <http://www.fao.org/tempref/SD/Reserved/Agromet/PET/FAO_Irrigation_Drainage_Paper_56.pdf>`_ Box 6
         """
 
         self.f2 = self.bulk_surface_resistance() / ra_factor
-        r""":math:`f_1 = \frac{rs}{f_{ra}}` with :math:`f_{ra}` = :meth:`aerodynamic_resistance_factor`."""
+        r""":math:`f_1 = \frac{rs}{f_{ra}}` with :math:`f_{ra}` = :meth:`aerodynamic_resistance_factor`"""
 
     def reset(self):
         r"""Reset the following output attributes before calculating :math:`ETo`: :math:`doy`, :math:`u2`,
@@ -196,35 +198,53 @@ class PenmanMonteithDaily(object):
 
     @staticmethod
     def atmospheric_pressure(z):
-        """ Return the atmospheric pressure in *[kPa]* as a function of the elevation above sea level as defined in
-        `FAO 56 <http://www.fao.org/tempref/SD/Reserved/Agromet/PET/FAO_Irrigation_Drainage_Paper_56.pdf>`_ (eq. 7).
+        r""" Return the atmospheric pressure (:math:`P`) *[kPa]* as a function of the elevation above sea level as
+        defined in `FAO 56 <http://www.fao.org/tempref/SD/Reserved/Agromet/PET/FAO_Irrigation_Drainage_Paper_56.pdf>`_
+        (eq. 7, p. 31):
 
-        The atmospheric pressure (*P*) is the pressure exerted by the weight of the earth's atmosphere. Evaporation at
-        high altitudes is promoted due to low atmospheric pressure as expressed in the psychrometric constant.
-        The effect is, however, small and in the calculation procedures, the average value for a location is sufficient.
-        A simplification of the ideal gas law, assuming 20 *°C* for a standard atmosphere, can be employed to calculate
-        :math:`P` (`FAO 56 <http://www.fao.org/tempref/SD/Reserved/Agromet/PET/FAO_Irrigation_Drainage_Paper_56.pdf>`_).
+        .. math::
+
+            P = 101.3\left(\frac{293-0.0065z}{293}\right)^{5.26}
+
+        The atmospheric pressure (:math:`P`) is the pressure exerted by the weight of the earth's atmosphere.
+        Evaporation at high altitudes is promoted due to low atmospheric pressure as expressed in the psychrometric
+        constant. The effect is, however, small and in the calculation procedures, the average value for a location
+        is sufficient. A simplification of the ideal gas law, assuming :math:`20` *°C* for a standard atmosphere,
+        can be employed to calculate :math:`P`
+        (`FAO 56 <http://www.fao.org/tempref/SD/Reserved/Agromet/PET/FAO_Irrigation_Drainage_Paper_56.pdf>`_).
 
         :param z: elevation above sea level *[m]*
         :type z: float or np.array
-        :return: (*float or np.array*) atmospheric pressure *[kPa]*
+        :return: (*float or np.array*) atmospheric pressure (:math:`P`) *[kPa]*
         """
         return 101.3 * ((293.0 - 0.0065 * z) / 293.0) ** 5.26
 
     @staticmethod
     def latent_heat_of_vaporization(temperature=20):
-        """Return the Latent Heat of Vaporization in MJ/kg as described in
-        `FAO 56 <http://www.fao.org/tempref/SD/Reserved/Agromet/PET/FAO_Irrigation_Drainage_Paper_56.pdf>`_ (eq. 3-1).
+        r"""Return the latent heat of vaporization (:math:`\lambda`) *[MJ/kg]* as described in
+        `FAO 56 <http://www.fao.org/tempref/SD/Reserved/Agromet/PET/FAO_Irrigation_Drainage_Paper_56.pdf>`_
+        (Annex 3, eq. 3-1, p. 223):
 
-        :param temperature: air temperature in *[°C]*. Default value: :math:`temperature=20`
+        .. math::
+
+            \lambda = 2.501-(2.361 * 10^{-3})T
+
+        :param temperature: air temperature (:math:`T`) *[°C]*. Default :math:`temperature=20`
         :type temperature: float or np.array
-        :return: (*float or np.array*) Default = :math:`2.45378` *MJ/kg*
+        :return: (*float or np.array*) latent heat of vaporization (:math:`\lambda`) *[MJ/kg]*.
+            Default :math:`\lambda=2.45378`
         """
         return 2.501 - 2.361e-3 * temperature
 
     @staticmethod
     def psychrometric_constant(p, a_psy=0.000665):
-        """Return the psychrometric constant in *kPa/°C*
+        r"""Return the psychrometric constant (:math:`\gamma`) *[kPa/°C]* according to
+        `FAO 56 <http://www.fao.org/tempref/SD/Reserved/Agromet/PET/FAO_Irrigation_Drainage_Paper_56.pdf>`_
+        eq. 8, p. 32:
+
+        .. math::
+
+            \gamma = \frac{c_p P}{\varepsilon \lambda}
 
         :param p: atmospheric pressure *[kPa]*
         :type p: float or np.array
@@ -235,30 +255,43 @@ class PenmanMonteithDaily(object):
             * a_psy = 0.000800 for natural ventilated psychrometers (about 1 m/s)
             * a_psy = 0.001200 for non-ventilated psychrometers installed indoors
 
-        :return: (*float or np.array*) psychrometric constant *[kPa/°C]*
+        :type a_psy: float
+
+        :return: (*float or np.array*) psychrometric constant (:math:`\gamma`) *[kPa/°C]*
         """
         return a_psy * p
 
     @staticmethod
     def saturation_vapour_pressure(*temperature):
-        """Return the saturation vapour pressure according to
-        `FAO 56 <http://www.fao.org/tempref/SD/Reserved/Agromet/PET/FAO_Irrigation_Drainage_Paper_56.pdf>`_ (eq. 11).
+        r"""Return the saturation vapour pressure (:math:`e_s`) *[kPa]* according to
+        `FAO 56 <http://www.fao.org/tempref/SD/Reserved/Agromet/PET/FAO_Irrigation_Drainage_Paper_56.pdf>`_
+        (eq. 11, p. 36):
 
-        :param temperature: air temperature *[°C]*
+        .. math::
+
+             e^{°}(T) = 0.6108 exp \left[\frac{17.27 T}{T + 237.3}\right]
+
+        :param temperature: air temperature (:math:`T`) *[°C]*
         :type temperature: float or np.array
-        :return: (*float or np.array*) saturation vapour pressure *[kPa]*
+        :return: (*float or np.array*) saturation vapour pressure (:math:`e_s`) *[kPa]*
         """
         t = np.array([0.6108 * np.exp((17.27 * t) / (t + 237.3)) for t in temperature])
         t = np.mean(t, axis=0)
         return t
 
     @staticmethod
-    def saturation_slope_vapour_pressure_curve(*temperature):
-        """Return the saturation slope vapour pressure curve *[kPa/°C]*.
+    def slope_of_saturation_vapour_pressure_curve(*temperature):
+        r"""Return the slope of saturation vapour pressure curve (:math:`\Delta`) *[kPa/°C]* according to
+        `FAO 56 <http://www.fao.org/tempref/SD/Reserved/Agromet/PET/FAO_Irrigation_Drainage_Paper_56.pdf>`_
+        (eq. 13, p. 37):
 
-        :param temperature: temperature: air temperature *[°C]*
+         .. math::
+
+             \Delta = 4098\left[\frac{0.6108exp\left(\frac{17.27 T}{T + 237.3}\right)}{(T + 237.3)^{2}}\right]
+
+        :param temperature: air temperature (:math:`T`) *[°C]*
         :type temperature: float or np.array
-        :return: (*float or np.array*) saturation slope vapour pressure curve
+        :return: (*float or np.array*) slope of saturation vapour pressure curve (:math:`\Delta`) *[kPa/°C]*
         """
         sl = np.array([(4098.0 * PenmanMonteithDaily.saturation_vapour_pressure(t)) / ((t + 237.3) ** 2)
                        for t in temperature])
@@ -266,28 +299,28 @@ class PenmanMonteithDaily(object):
 
     @staticmethod
     def actual_vapour_pressure(**kwargs):
-        """Return the actual vapour pressure in (:math:`e_a`) *[kPa]* as defined in
+        """Return the actual vapour pressure (:math:`e_a`) *[kPa]* as defined in
         `FAO 56 <http://www.fao.org/tempref/SD/Reserved/Agromet/PET/FAO_Irrigation_Drainage_Paper_56.pdf>`_
-        (pages 37 , 38 , and 39).
+        (p. 37 , 38 , and 39):
 
         :Keyword Arguments:
 
-           * **rh_min** (*float*) - 0.0 to 100.0 [%]
-           * **rh_max** (*float*) - 0.0 to 100.0 [%]
-           * **es_min** (*float*) - saturation vapour pressure for t_min
-           * **es_max** (*float*) - saturation vapour pressure for t_min
-           * **t_min** (*float*) - minimum air temperature [°C]
-           * **t_max** (*float*) - maximum air temperature [°C]
-           * **t_dew** (*float*) - dew point temperature [°C]
-           * **t_wet** (*float*) - wet bulb temperature [°C]
-           * **t_dry** (*float*) - dry bulb temperature [°C]
-           * **apsy** (*float*) - coefficient depending on the type of ventilation of the wet bulb
+           * **rh_min** (*float*) - 0.0 to 100.0 *[%]*
+           * **rh_max** (*float*) - 0.0 to 100.0 *[%]*
+           * **es_min** (*float*) - saturation vapour pressure for :math:`t\_min` *[kPa]*
+           * **es_max** (*float*) - saturation vapour pressure for :math:`t\_max` *[kPa]*
+           * **t_min** (*float*) - minimum air temperature *[°C]*
+           * **t_max** (*float*) - maximum air temperature *[°C]*
+           * **t_dew** (*float*) - dew point temperature *[°C]*
+           * **t_wet** (*float*) - wet bulb temperature *[°C]*
+           * **t_dry** (*float*) - dry bulb temperature *[°C]*
+           * **apsy** (*float*) - coefficient depending on the type of ventilation of the wet bulb *[-]*
 
-        :return: (*float or np.array*) actual vapour pressure in (:math:`e_a`) *[kPa]*
+        :return: (*float or np.array*) actual vapour pressure (:math:`e_a`) *[kPa]*
         """
         try:
-            rh_min = kwargs['rh_min'] / 100
-            rh_max = kwargs['rh_max'] / 100
+            rh_min = kwargs['rh_min'] / 100.0
+            rh_max = kwargs['rh_max'] / 100.0
             if 'es_min' in kwargs and 'es_max' in kwargs:
                 es_min = kwargs['es_min']
                 es_max = kwargs['es_max']
@@ -300,7 +333,7 @@ class PenmanMonteithDaily(object):
             return 0.6108 * math.exp((17.27 * t_dew) / (t_dew + 237.3))
 
     def aerodynamic_resistance_factor(self):
-        r"""Return the aerodynamic resistance (:math:`r_a`) as defined in
+        r"""Return the aerodynamic resistance (:math:`r_a`) *[s/m]* as defined in
         `FAO 56 <http://www.fao.org/tempref/SD/Reserved/Agromet/PET/FAO_Irrigation_Drainage_Paper_56.pdf>`_
         (eq. 4, p. 20):
 
@@ -311,13 +344,13 @@ class PenmanMonteithDaily(object):
 
         where (see :meth:`PenmanMonteithDaily()`):
 
-            :math:`u_z` is the wind speed at height :math:`z` (see :meth:`et0()`),
+            :math:`u_z` --- the wind speed *[m/s]* at height :math:`z` (see :meth:`et0()`)
 
-            :math:`k` is the von Karman's constant [-],
+            :math:`k` --- von Karman's constant *[-]*
 
-            :math:`zm` height of wind measurements [m], and
+            :math:`zm` --- height of wind measurements *[m]*
 
-            :math:`zh` height of air humidity measurements [m].
+            :math:`zh` --- height of air humidity measurements *[m]*
 
         The aerodynamic resistance factor :math:`f_{r_a}` is constant for a given crop:
 
@@ -338,11 +371,11 @@ class PenmanMonteithDaily(object):
 
             z_{om} = f_{zom}  \cdot  h
 
-        where
+        where:
 
-            :math:`f_d` is defined in :attr:`d_factor` and
+            :math:`f_d` --- defined in :attr:`d_factor`
 
-            :math:`f_{zom}` is defined in in :attr:`zom_factor`.
+            :math:`f_{zom}` --- defined in in :attr:`zom_factor`
 
         :return: (*float*) aerodynamic resistance factor :math:`f_{r_a}`
         """
@@ -367,11 +400,11 @@ class PenmanMonteithDaily(object):
 
             r_s = \frac{ r_l } { LAI_{active} }
 
-        where
+        where:
 
-            :math:`r_l` is the bulk stomatal resistance of the well-illuminated leaf *[s/m]* and
+            :math:`r_l` --- the bulk stomatal resistance of the well-illuminated leaf *[s/m]*
 
-            :math:`LAI_{active}` is the active (sunlit) leaf area index *[m² (leaf area) / m² (soil surface)]*.
+            :math:`LAI_{active}` --- the active (sunlit) leaf area index *[m² (leaf area) / m² (soil surface)]*
 
         A general equation for :math:`LAI_{active}` is:
 
@@ -379,7 +412,7 @@ class PenmanMonteithDaily(object):
 
             LAI_{active} = 0.5 LAI
 
-        with
+        with:
 
         .. math::
 
@@ -387,7 +420,7 @@ class PenmanMonteithDaily(object):
 
         where :math:`h` is an optional input parameter in :class:`PenmanMonteithDaily`.
 
-        :return: (*float*): :math:`r_s` - (bulk) surface resistance *[s/m]*
+        :return: (*float*) (bulk) surface resistance :math:`r_s` *[s/m]*
         """
         #
         # active (sunlit) leaf area index [m^2 (leaf area) / m^2 (soil surface)]
@@ -414,7 +447,7 @@ class PenmanMonteithDaily(object):
 
     @staticmethod
     def extraterrestrial_radiation(dr, ws, lat, sd):
-        r"""Return the extraterrestrial radiation :math:`R_a` *[MJ/m²day]* as defined in
+        r"""Return the extraterrestrial radiation (:math:`R_a`) *[MJ/m²day]* as defined in
         `FAO 56 <http://www.fao.org/tempref/SD/Reserved/Agromet/PET/FAO_Irrigation_Drainage_Paper_56.pdf>`_
         (eq. 21, p. 46):
 
@@ -440,7 +473,7 @@ class PenmanMonteithDaily(object):
 
     @staticmethod
     def inverse_relative_distance_earth_sun(day):
-        r"""Return the inverse relative distance Earth-Sun (:math:`d_r`) as defined in
+        r"""Return the inverse relative distance Earth-Sun (:math:`d_r`) *[-]* as defined in
         `FAO 56 <http://www.fao.org/tempref/SD/Reserved/Agromet/PET/FAO_Irrigation_Drainage_Paper_56.pdf>`_
         (eq. 23, p. 46):
 
@@ -450,14 +483,14 @@ class PenmanMonteithDaily(object):
 
         :param day: day of the year (:math:`J`) *[-]*. Range: :math:`1 \leq J \leq 366`
         :type day: int or np.array
-        :return: *(float or np.array)* inverse relative distance Earth-Sun *[-]*
+        :return: *(float or np.array)* inverse relative distance Earth-Sun (:math:`d_r`) *[-]*
         """
         # 2.0 * pi / 365 = 0.01721420632103996
         return 1 + 0.033 * np.cos(0.01721420632103996 * day)
 
     @staticmethod
     def solar_declination(day):
-        r"""Return the solar declination (:math:`\delta`) as defined in
+        r"""Return the solar declination (:math:`\delta`) *[rad]* as defined in
         `FAO 56 <http://www.fao.org/tempref/SD/Reserved/Agromet/PET/FAO_Irrigation_Drainage_Paper_56.pdf>`_
         (eq. 24, p. 46):
 
@@ -467,14 +500,14 @@ class PenmanMonteithDaily(object):
 
         :param day: day of the year (:math:`J`) *[-]*. Range: :math:`1 \leq J \leq 366`
         :type day: int
-        :return: (*float or np.array*) solar declination *[rad]*
+        :return: (*float or np.array*) solar declination (:math:`\delta`) *[rad]*
         """
         # 2.0 * pi / 365 = 0.01721420632103996
         return 0.409 * np.sin(0.01721420632103996 * day - 1.39)
 
     @staticmethod
     def sunset_hour_angle(lat, sd):
-        r"""Return the sunset hour angle (:math:`\omega_s`) as defined in
+        r"""Return the sunset hour angle (:math:`\omega_s`) *[rad]* as defined in
         `FAO 56 <http://www.fao.org/tempref/SD/Reserved/Agromet/PET/FAO_Irrigation_Drainage_Paper_56.pdf>`_
         (eq. 25, p. 46):
 
@@ -486,13 +519,13 @@ class PenmanMonteithDaily(object):
         :type lat: float or np.array
         :param sd: solar declination (:math:`\delta`) *[rad]*. See :meth:`solar_declination`
         :type sd: float or np.array
-        :return: (*float or np.array*) sunset hour angle *[rad]*
+        :return: (*float or np.array*) sunset hour angle (:math:`\omega_s`) *[rad]*
         """
         return np.arccos(-np.tan(sd) * np.tan(lat))
 
     @staticmethod
     def daylight_hours(ws):
-        r"""Return the daylight hours (:math:`N`) as defined in
+        r"""Return the daylight hours (:math:`N`) *[hour]* as defined in
         `FAO 56 <http://www.fao.org/tempref/SD/Reserved/Agromet/PET/FAO_Irrigation_Drainage_Paper_56.pdf>`_
         (eq. 34, p. 49):
 
@@ -500,18 +533,16 @@ class PenmanMonteithDaily(object):
 
             N = \frac{24}{\pi} \omega_s
 
-        where :math:`\omega_s` is the sunset hour angle in radians given :meth:`sunset_hour_angle`.
-
         :param ws: sunset hour angle (:math:`\omega_s`) *[rad]*. See :meth:`sunset_hour_angle`
         :type ws: float or np.numpy
-        :return: (*float or np.numpy*) daylight hours *[hour]*
+        :return: (*float or np.numpy*) daylight hours (:math:`N`) *[hour]*
         """
         # 24.0 / pi = 7.639437268410976
         return 7.639437268410976 * ws
 
     @staticmethod
     def clear_sky_shortwave_radiation(ra, elevation=0.0, a_s=0.25, b_s=0.50):
-        r"""Return the clear-sky shortwave radiation (:math:`R_{so}`). It is required for computing
+        r"""Return the clear-sky shortwave radiation (:math:`R_{so}`) *[MJ/m²day]*. It is required for computing
         :meth:`net_longwave_radiation`.
 
         For near sea level or when calibrated values for :math:`a_s` and :math:`b_s` are available
@@ -521,14 +552,6 @@ class PenmanMonteithDaily(object):
         .. math::
 
            R_{so} = (a_s + b_s ) R_a
-
-
-        where:
-
-            :math:`R_{a}` is the clear-sky solar radiation *[MJ/m²day]*. See :meth:`extraterrestrial_radiation` and
-
-            :math:`a_s+b_s` is the fraction of extraterrestrial radiation reaching the earth on clear-sky days.
-            (:math:`n = N`).
 
         When calibrated values for :math:`a_s` and :math:`b_s` are not available
         (`FAO 56 <http://www.fao.org/tempref/SD/Reserved/Agromet/PET/FAO_Irrigation_Drainage_Paper_56.pdf>`_,
@@ -544,10 +567,10 @@ class PenmanMonteithDaily(object):
         :type ra: float or np.numpy
         :param elevation: meters above sea level see (:math:`z`) [m]. See :attr:`elevation`
         :type elevation: float or np.numpy
-        :param a_s: regression constant (:math:`a_s`) *[-]*. Default value: :math:`a_s=0.25`. It expresses the fraction of
+        :param a_s: regression constant (:math:`a_s`) *[-]*. Default :math:`a_s=0.25`. It expresses the fraction of
             extraterrestrial radiation reaching the earth on overcast days (:math:`n = 0`)
         :type a_s: float or np.numpy
-        :param b_s: regression constant (:math:`b_s`) *[-]*. Default value: :math:`b_s=0.50`. The expression
+        :param b_s: regression constant (:math:`b_s`) *[-]*. Default :math:`b_s=0.50`. The expression
             :math:`a_s+b_s` indicates the fraction of extraterrestrial radiation reaching the earth on clear days
             (:math:`n = N`)
         :type b_s: float or np.numpy
@@ -558,8 +581,8 @@ class PenmanMonteithDaily(object):
 
     @staticmethod
     def shortwave_radiation(ra, n, mn, a_s=0.25, b_s=0.50):
-        r"""Return the daily shortwave radiation in *[MJ/m²day]* according to the Angstrom formula as described in
-        `FAO 56 <http://www.fao.org/tempref/SD/Reserved/Agromet/PET/FAO_Irrigation_Drainage_Paper_56.pdf>`_
+        r"""Return the daily shortwave radiation (:math:`R_s`) *[MJ/m²day]* according to the Angstrom formula as
+        described in `FAO 56 <http://www.fao.org/tempref/SD/Reserved/Agromet/PET/FAO_Irrigation_Drainage_Paper_56.pdf>`_
         (eq. 35, p. 50):
 
         .. math::
@@ -576,16 +599,16 @@ class PenmanMonteithDaily(object):
         :param n: actual duration of sunshine or cloudless hours (:math:`n`) *[hour]*
         :type n: float or np.array
         :param mn: maximum possible duration of sunshine or daylight hours (:math:`N`) *[hour]*
-            See :meth:`daylight_hours`.
+            See :meth:`daylight_hours`
         :type mn: float, np.array
-        :param a_s: regression constant (:math:`as`) *[-]*. Default value: :math:`a_s=0.25`. It expresses the fraction
+        :param a_s: regression constant (:math:`as`) *[-]*. Default :math:`a_s=0.25`. It expresses the fraction
             of extraterrestrial radiation reaching the earth on overcast days (:math:`n = 0`)
         :type a_s: float or np.numpy
-        :param b_s: regression constant (:math:`bs`) *[-]*. Default value: :math:`b_s=0.50`. The expression
+        :param b_s: regression constant (:math:`bs`) *[-]*. Default :math:`b_s=0.50`. The expression
             :math:`a_s+b_s` indicates the fraction of extraterrestrial radiation reaching the earth on clear days
             (:math:`n = N`)
         :type b_s: float or np.numpy
-        :return: (*float, np.array*) daily total shortwave radiation (:math:`R_s`) reaching the earth *[MJ/m²day]*
+        :return: (*float, np.array*) daily total shortwave radiation (:math:`R_s`) *[MJ/m²day]* reaching the earth
 
         .. note::
                 If shortwave radiation (i.e., solar radiation) measurements are available, :meth:`shortwave_radiation`
@@ -598,8 +621,8 @@ class PenmanMonteithDaily(object):
 
     @staticmethod
     def net_shortwave_radiation(rs, albedo):
-        r"""The net shortwave radiation (:math:`R_{ns}`) resulting from the balance between incoming and reflected
-        solar radiation as defined in
+        r"""The net shortwave radiation (:math:`R_{ns}`) *[MJ/m²day]* resulting from the balance between incoming
+        and reflected solar radiation as defined in
         `FAO 56 <http://www.fao.org/tempref/SD/Reserved/Agromet/PET/FAO_Irrigation_Drainage_Paper_56.pdf>`_
         (eq. 38, p. 51):
 
@@ -613,7 +636,7 @@ class PenmanMonteithDaily(object):
             :math:`0.0  \leq \alpha \leq 1.0` (:math:`\alpha=0.23` for the hypothetical grass reference crop).
             See :class:`PenmanMonteithDaily` and :meth:`et0`
         :type albedo: float or np.array
-        :return: (*float or np.array*) daily net shortwave radiation (:math:`R_{ns}`) reaching the earth *[MJ/m²day]*
+        :return: (*float or np.array*) daily net shortwave radiation (:math:`R_{ns}`) *[MJ/m²day]* reaching the earth
         """
         return (1.0 - albedo) * rs
 
@@ -656,14 +679,14 @@ class PenmanMonteithDaily(object):
         return rln
 
     def et0(self, **kwargs):
-        r"""Returns potential evapotranspiration (*ETo*) in *[mm/day]* as described in
+        r"""Returns potential evapotranspiration (:math:`ETo`) *[mm/day]* as described in
         `FAO 56 <http://www.fao.org/tempref/SD/Reserved/Agromet/PET/FAO_Irrigation_Drainage_Paper_56.pdf>`_. Reference
         (grass) potencial evapotranspiration is returned for default constructor values. If values in `**kwargs` are
         arrays, their lengths must be the same.
 
         :Keyword Arguments:
 
-           * **date** (str, datetime.date, datetime.datetime, pandas.TimeStamp, or np.array)
+           * **date** (*str, datetime.date, datetime.datetime, pandas.TimeStamp, or np.array*)
            * **doy** (*int or np.array*) - day of the year (:math:`J`) *[-]*. Range: :math:`1 \leq J \leq 366`.
              It is not used if date is given
            * **u2** (*float or np.array*) - wind speed at 2 meters above ground surface *[m/s]*
@@ -676,22 +699,22 @@ class PenmanMonteithDaily(object):
            * **rh_min** (*float or np.array*) - daily minimum relative humidity *[%]*
            * **rh_max** (*float or np.array*) - daily maximum relative humidity *[%]*
            * **rs** (*float or np.array*) - solar or shortwave radiation *[MJ/m²day]*
-           * **n** (*float or np.array*) - daily actual duration of sunshine or cloudless hours *[hour]*.
+           * **n** (*float or np.array*) - daily actual duration of sunshine or cloudless hours *[hour]*
            * **g** (*float or np.array*) - soil heat flux density *[MJ/m²day]*. If not given, *g* defined in
              :meth:`PenmanMonteithDaily` will be used
            * **a_s** (*float or np.array*) - see :meth:`shortwave_radiation`. Default :math:`a_s = 0.25`
            * **b_s** (*float or np.array*) - see :meth:`shortwave_radiation`. Default :math:`b_s = 0.50`
-           * **negative_rnl** (bool) - allow negative net longwave radiation.  Default negative_rnl=True
-           * **negative_et0** (bool) - allow negative reference evapotranspiration.  Default negative_et0=True
+           * **negative_rnl** (*bool*) - allow negative net longwave radiation. Default :math:`negative\_rnl=True`
+           * **negative_et0** (*bool*) - allow negative reference evapotranspiration. Default :math:`negative\_et0=True`
 
-        :return: (*float or np.array*) potential evapotranspiration *[mm/day]*
+        :return: (*float or np.array*) potential evapotranspiration (:math:`ETo`) *[mm/day]*
 
         Cases:
 
-        * If date and doy are given, doy is disregarded
-        * if uz is given, z must also be given
-        * if u2 and (uz, z) are given, both uz and z are disregarded
-        * if rs and n are given, n will be disregarded
+        * If date and doy are given, :math:`doy` is disregarded
+        * if :math:`uz` is given, :math:`z` must also be given
+        * if :math:`u2` and (:math:`uz`, :math:`z`) are given, both :math:`uz` and :math:`z` are disregarded
+        * if :math:`rs` and :math:`n` are given, :math:`n` will be disregarded
         * The best options for air temperature are, in this order: 1) t_min, t_max, and t_mean, 2) t_min, t_max, and
           3) tmean
         * The best options for relative air humidity are, in this order: 1) rh_max and rh_min, 2) rh_max, and 3)
@@ -775,7 +798,7 @@ class PenmanMonteithDaily(object):
         self.ld = PenmanMonteithDaily.latent_heat_of_vaporization(t_mean)
         # In FAO 56, where delta occurs in the numerator and denominator, the slope
         # of the vapour pressure curve is calculated using mean air temperature (Equation 9)
-        self.s = PenmanMonteithDaily.saturation_slope_vapour_pressure_curve(t_mean)
+        self.s = PenmanMonteithDaily.slope_of_saturation_vapour_pressure_curve(t_mean)
         self.pc = PenmanMonteithDaily.psychrometric_constant(self.p)
 
         self.es = PenmanMonteithDaily.saturation_vapour_pressure(t_min, t_max)
@@ -824,17 +847,17 @@ class PenmanMonteithDaily(object):
         return self.et
 
     def et0_frame(self, df, **kwargs):
-        """Return the input DataFrame extended by et0 and further calculation parameters.
+        """Return the input DataFrame extended by :meth:`et0` and further calculation parameters.
 
         :param df: pandas DataFrame with columns corresponding to the inputs described in :meth:`et0`
         :type df: pandas.DataFrame
 
         :Keyword Arguments:
 
-           * **show_all** (*bool*): show all result fields if True, otherwise set `parameter=True` to show a parameter.
-             For example doy=True, lb=True, etc. See :meth:`PenmanMonteithDaily`.
+           * **show_all** (*bool*) - show all results if :math:`True`, otherwise set `parameter=True` to show individual
+             parameters. For example :math:`doy=True`, :math:`ld=True`, etc. See :meth:`PenmanMonteithDaily`
 
-        :return: (pandas.DataFrame) DataFrame
+        :return: (*pandas.DataFrame*) DataFrame
         """
 
         doy_str = kwargs.get('doy', 'doy')

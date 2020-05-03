@@ -1,11 +1,6 @@
 evapotranspiration package
 ==========================
 
-.. automodule:: evapotranspiration
-   :members:
-   :undoc-members:
-   :show-inheritance:
-
 Submodules
 ----------
 
@@ -17,3 +12,11 @@ evapotranspiration.penman\_monteith\_daily module
    :undoc-members:
    :show-inheritance:
 
+
+Module contents
+---------------
+
+.. automodule:: evapotranspiration
+   :members:
+   :undoc-members:
+   :show-inheritance:
