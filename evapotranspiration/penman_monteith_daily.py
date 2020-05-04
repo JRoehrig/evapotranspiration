@@ -237,7 +237,7 @@ class PenmanMonteithDaily(object):
         return 2.501 - 2.361e-3 * temperature
 
     @staticmethod
-    def psychrometric_constant(p, a_psy=0.000665):
+    def psychrometric_constant(p, **kwargs):
         r"""Return the psychrometric constant (:math:`\gamma`) *[kPa/°C]* according to
         `FAO 56 <http://www.fao.org/tempref/SD/Reserved/Agromet/PET/FAO_Irrigation_Drainage_Paper_56.pdf>`_
         eq. 8, p. 32:
@@ -246,20 +246,40 @@ class PenmanMonteithDaily(object):
 
             \gamma = \frac{c_p P}{\varepsilon \lambda}
 
-        :param p: atmospheric pressure *[kPa]*
+        or, using default values:
+
+        .. math::
+
+            \gamma = a_{psy} \cdot P
+
+        :param p: atmospheric pressure (:math:`P`) *[kPa]*
         :type p: float or np.array
-        :param a_psy: coefficient depending on the type of the ventilation of the bulb *[1/°C]*. Examples:
 
-            * a_psy = 0.000665 (default)
-            * a_psy = 0.000662 for ventilated (Asmann type) psychrometers, with an air movement of some 5 m/s
-            * a_psy = 0.000800 for natural ventilated psychrometers (about 1 m/s)
-            * a_psy = 0.001200 for non-ventilated psychrometers installed indoors
+        :Keyword Arguments:
 
-        :type a_psy: float
+           * **lamda** (*float*) - latent heat of vaporization (:math:`\lambda`) *[MJ/kg]*. Default :math:`lamda=2.45`.
+             See Used in :meth:`latent_heat_of_vaporization`
+           * **cp** (*float*) - specific heat at constant pressure (:math:`c_p`) *[MJ/kg]*. Default
+             :math:`cp=1.013e^{-3}`
+           * **epsilon** (*float*) - ratio molecular weight of water vapour/dry air (:math:`\epsilon`) *[-]*.
+             Default :math:`epsilon=0.622`
+           * **a_psy** (*float*) - coefficient depending on the type of the ventilation of the bulb *[1/°C]*. Examples:
+
+             * :math:`a_{psy} = 0.000665` (default)
+             * :math:`a_{psy} = 0.000662` for ventilated (Asmann type) psychrometers, with an air movement of some 5
+               *m/s*
+             * :math:`a_{psy} = 0.000800` for natural ventilated psychrometers (about 1 *m/s*)
+             * :math:`a_{psy} = 0.001200` for non-ventilated psychrometers installed indoors
+
+        The method uses :math:`a_{psy}` if given, otherwise eq. 8 (see above) with given or default values. Default
+        values correspond to :math:`a_{psy} = 0.000665` as argument.
 
         :return: (*float or np.array*) psychrometric constant (:math:`\gamma`) *[kPa/°C]*
         """
-        return a_psy * p
+        if 'a_psy' in kwargs:
+            return kwargs.get('a_psy', 0.000665) * p
+        else:
+            return (kwargs.get('cp', 1.013e-3) * p) / (kwargs.get('epsilon', 0.622) * kwargs.get('lamda', 2.45))
 
     @staticmethod
     def saturation_vapour_pressure(*temperature):
@@ -799,7 +819,7 @@ class PenmanMonteithDaily(object):
         # In FAO 56, where delta occurs in the numerator and denominator, the slope
         # of the vapour pressure curve is calculated using mean air temperature (Equation 9)
         self.s = PenmanMonteithDaily.slope_of_saturation_vapour_pressure_curve(t_mean)
-        self.pc = PenmanMonteithDaily.psychrometric_constant(self.p)
+        self.pc = PenmanMonteithDaily.psychrometric_constant(self.p, lamda=self.ld)
 
         self.es = PenmanMonteithDaily.saturation_vapour_pressure(t_min, t_max)
         self.ea = PenmanMonteithDaily.actual_vapour_pressure(rh_min=rh_min, rh_max=rh_max, t_min=t_min, t_max=t_max)
