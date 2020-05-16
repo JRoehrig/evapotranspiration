@@ -27,8 +27,8 @@ One possible set of parameters is day of the year (doy) [-], temperature (t) [°
     >>> print(et0_188)
     3.7135214054227945
 
-The day of the year can be replaced by the date ("YYYY-MM-DD") and the number of cloudless hours 
-can be replaced by the shortwave radiation (rs) [MJ/m²day].
+The day of the year can be replaced by date ("YYYY-MM-DD") and the number of cloudless hours 
+can be replaced by shortwave radiation (rs) [MJ/m²day].
 
     >>> pm = PenmanMonteithDaily(elevation=100, latitude=50.80)
     >>> et0_187 = pm.et0(date='2019-07-06', u2=2.078, t_min=12.3, t_max=21.5, rh_min=63, rh_max=84, rs=22)
